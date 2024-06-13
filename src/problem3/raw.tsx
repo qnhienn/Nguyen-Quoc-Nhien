@@ -38,40 +38,36 @@ const WalletPage: React.FC<Props> = (props: Props) => {
   };
 
   const sortedBalances = useMemo(() => {
-    return (
-      balances
-        .filter((balance: WalletBalance) => {
-          // The `blockchain` property does not exist in the `WalletBalance` interface
-          // --> Add property `blockchain` to the `WalletBalance` interface
-          const balancePriority = getPriority(balance.blockchain);
+    return balances
+      .filter((balance: WalletBalance) => {
+        // The `blockchain` property does not exist in the `WalletBalance` interface
+        // --> Add property `blockchain` to the `WalletBalance` interface
+        const balancePriority = getPriority(balance.blockchain);
 
-          // Variable `lhsPriority` is not defined
-          // Avoid using "magic number" `-99`
-          // --> Replace `lhsPriority` with `balancePriority` variable
-          // --> Combine conditional expressions to improve code readability and maintainability
-          // --> Declare constant: -99
-          if (lhsPriority > -99) {
-            if (balance.amount <= 0) {
-              return true;
-            }
+        // Variable `lhsPriority` is not defined
+        // Avoid using "magic number" `-99`
+        // --> Replace `lhsPriority` with `balancePriority` variable
+        // --> Combine conditional expressions to improve code readability and maintainability
+        // --> Declare constant: -99
+        if (lhsPriority > -99) {
+          if (balance.amount <= 0) {
+            return true;
           }
-          return false;
-        })
-        // Function `sort` not return value, so can not use it in return statement
-        // --> Sort on a variable and return this variable
-        .sort((lhs: WalletBalance, rhs: WalletBalance) => {
-          const leftPriority = getPriority(lhs.blockchain);
-          const rightPriority = getPriority(rhs.blockchain);
+        }
+        return false;
+      })
+      .sort((lhs: WalletBalance, rhs: WalletBalance) => {
+        const leftPriority = getPriority(lhs.blockchain);
+        const rightPriority = getPriority(rhs.blockchain);
 
-          // Miss return value when `leftPriority` = `rightPriority`
-          // --> Use `rightPriority - leftPriority` as return value to make code simply
-          if (leftPriority > rightPriority) {
-            return -1;
-          } else if (rightPriority > leftPriority) {
-            return 1;
-          }
-        })
-    );
+        // Miss return value when `leftPriority` = `rightPriority`
+        // --> Use `rightPriority - leftPriority` as return value to make code simply
+        if (leftPriority > rightPriority) {
+          return -1;
+        } else if (rightPriority > leftPriority) {
+          return 1;
+        }
+      });
 
     // The `prices` dependency is redundant
     // Miss `getPriority` dependency
